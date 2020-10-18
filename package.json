@@ -1,26 +1,34 @@
 {
-  "name": "typescript-action",
+  "name": "pick-up-jira-ticket-id-action",
   "version": "0.0.0",
   "private": true,
-  "description": "TypeScript template action",
+  "description": "Pick up Jira ticket ID from commit comment and combine as PR's comment",
+  "keywords": [
+    "actions",
+    "jira",
+    "github"
+  ],
+  "homepage": "https://github.com/tyankatsu0105/pick-up-jira-ticket-id-action#readme",
+  "bugs": {
+    "url": "https://github.com/tyankatsu0105/pick-up-jira-ticket-id-action/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tyankatsu0105/pick-up-jira-ticket-id-action.git"
+  },
+  "license": "MIT",
+  "author": "tyankatsu <frips.ryilsufupe+dev@gmail.com> (https://tyankatsu.netlify.com/)",
   "main": "lib/main.js",
   "scripts": {
+    "all": "npm run build && npm run format && npm run lint && npm run package && npm test",
     "build": "tsc",
     "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",
     "lint": "eslint src/**/*.ts",
     "package": "ncc build --source-map --license licenses.txt",
-    "test": "jest",
-    "all": "npm run build && npm run format && npm run lint && npm run package && npm test",
-    "release": "shipjs prepare"
+    "release": "shipjs prepare",
+    "test": "jest"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
-  },
-  "keywords": ["actions", "node", "setup"],
-  "author": "",
-  "license": "MIT",
   "dependencies": {
     "@actions/core": "^1.2.6"
   },
