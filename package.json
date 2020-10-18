@@ -20,7 +20,7 @@
   "author": "tyankatsu <frips.ryilsufupe+dev@gmail.com> (https://tyankatsu.netlify.com/)",
   "main": "dist/index.js",
   "scripts": {
-    "build": "ncc build src/main.ts -m",
+    "build": "ncc build src/main.ts -m --license licenses.txt",
     "format": "prettier --write **/*.ts",
     "format-check": "prettier --check **/*.ts",
     "lint": "eslint src/**/*.ts",
