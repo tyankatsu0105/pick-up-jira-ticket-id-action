@@ -33,13 +33,7 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Check diff
-        id: check-diff
-        run: |
-          echo ::set-output name=diff-files::$(git diff --diff-filter=AM --name-only)
-
       - name: Commit files
-        if: steps.check-diff.outputs.diff-files
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
@@ -47,7 +41,6 @@ jobs:
           git commit -a -m "build: build production"
 
       - name: Push changes
-        if: steps.check-diff.outputs.diff-files
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
