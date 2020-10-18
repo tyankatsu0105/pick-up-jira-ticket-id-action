@@ -1,44 +1,52 @@
 {
-  "name": "typescript-action",
+  "name": "pick-up-jira-ticket-id-action",
   "version": "0.0.0",
   "private": true,
-  "description": "TypeScript template action",
-  "main": "lib/main.js",
-  "scripts": {
-    "build": "tsc",
-    "format": "prettier --write **/*.ts",
-    "format-check": "prettier --check **/*.ts",
-    "lint": "eslint src/**/*.ts",
-    "package": "ncc build --source-map --license licenses.txt",
-    "test": "jest",
-    "all": "npm run build && npm run format && npm run lint && npm run package && npm test"
+  "description": "Pick up Jira ticket ID from commit comment and combine as PR's comment",
+  "keywords": [
+    "actions",
+    "jira",
+    "github"
+  ],
+  "homepage": "https://github.com/tyankatsu0105/pick-up-jira-ticket-id-action#readme",
+  "bugs": {
+    "url": "https://github.com/tyankatsu0105/pick-up-jira-ticket-id-action/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/actions/typescript-action.git"
+    "url": "git+https://github.com/tyankatsu0105/pick-up-jira-ticket-id-action.git"
   },
-  "keywords": [
-    "actions",
-    "node",
-    "setup"
-  ],
-  "author": "",
   "license": "MIT",
+  "author": "tyankatsu <frips.ryilsufupe+dev@gmail.com> (https://tyankatsu.netlify.com/)",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "ncc build src/main.ts -m --license licenses.txt",
+    "precommit": "lint-staged",
+    "commit": "git-cz",
+    "release": "shipjs prepare",
+    "test": "jest"
+  },
   "dependencies": {
     "@actions/core": "^1.2.6"
   },
   "devDependencies": {
+    "@types/eslint": "^7.2.4",
     "@types/jest": "^26.0.10",
     "@types/node": "^14.10.0",
     "@typescript-eslint/parser": "^3.10.1",
     "@vercel/ncc": "^0.23.0",
+    "commitizen": "^4.2.1",
+    "cz-format-extension": "^1.4.0",
     "eslint": "^7.8.1",
-    "eslint-plugin-github": "^4.1.1",
+    "eslint-config-prettier": "^6.13.0",
     "eslint-plugin-jest": "^23.20.0",
+    "eslint-plugin-prettier": "^3.1.4",
     "jest": "^24.9.0",
     "jest-circus": "^26.4.2",
     "js-yaml": "^3.14.0",
+    "lint-staged": "^10.4.2",
     "prettier": "2.1.1",
+    "shipjs": "0.22.0",
     "ts-jest": "^24.3.0",
     "typescript": "^4.0.2"
   }

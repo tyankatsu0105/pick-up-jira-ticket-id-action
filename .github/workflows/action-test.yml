@@ -1,8 +1,8 @@
-name: Test
+name: Action Test
 on: push
 jobs:
-  test:
-    name: Test
+  action-test:
+    name: Action Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -27,6 +27,7 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Test
-        run: npm test
+      - uses: ./
+        with:
+          milliseconds: 1000
 

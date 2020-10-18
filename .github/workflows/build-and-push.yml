@@ -1,8 +1,12 @@
-name: Test
-on: push
+name: Build and Push
+on:
+  push:
+    branches:
+      - 'releases/v*'
+    
 jobs:
-  test:
-    name: Test
+  build-and-push:
+    name: Build and Push
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -27,6 +31,15 @@ jobs:
       - name: Build
         run: npm run build
 
-      - name: Test
-        run: npm test
+      - name: Commit files
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add -f dist
+          git commit -a -m "build: build production"
 
+      - name: Push changes
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
