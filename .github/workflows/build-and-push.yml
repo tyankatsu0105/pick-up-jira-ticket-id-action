@@ -35,8 +35,8 @@ jobs:
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add dist
-          git commit -a -m "build: prod dependencies"
+          git add -f dist
+          git commit -a -m "build: build production"
 
       - name: Push changes
         uses: ad-m/github-push-action@master
