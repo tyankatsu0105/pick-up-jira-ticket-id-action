@@ -3,15 +3,34 @@
 // ==============================
 
 const { types } = require('./.czfe/types.json')
+const { JiraTicketKeys } = require('./.czfe/jira-ticket-keys.json')
+const notExistJiraTicket = 'Not exist Jira ticket'
 
   /**
-   * @typedef {{type: string; scope: string; subject: string; body: string; isBreaking: boolean; breakingBody: string; breaking: string; isIssueAffected: boolean; issuesBody: string; issues: string;}} Answers
+   * @typedef {{JiraTicketKeys: string; JiraTicketID: string; type: string; scope: string; subject: string; body: string; isBreaking: boolean; breakingBody: string; breaking: string; isIssueAffected: boolean; issuesBody: string; issues: string;}} Answers
    */
 
 /** @type import('cz-format-extension').Config<Answers> */
 module.exports = {
-  questions() {
+  questions({inquirer}) {
     return [
+      {
+        type: "list",
+        name: "JiraTicketKeys",
+        choices: [
+          ...JiraTicketKeys, 
+          new inquirer.Separator(),
+          notExistJiraTicket
+        ],
+        message: "Select Jira subtask ticket key",
+      },
+      {
+        type: 'input',
+        name: 'JiraTicketID',
+        message:
+          'Input ID',
+        when: answers => answers.JiraTicketKeys !== notExistJiraTicket
+      },
       {
         type: "list",
         name: "type",
@@ -81,12 +100,14 @@ module.exports = {
 
   },
   commitMessage({answers}) {
+    const jiraTicket = answers.JiraTicketKeys !== notExistJiraTicket && `${answers.JiraTicketKeys}-${answers.JiraTicketID}`
+
     const scope = answers.scope ? `(${answers.scope})` : '';
     const head = `${answers.type}${scope}: ${answers.subject}`;
     const body = answers.body ? answers.body : false;
     const breaking = answers.breaking ? `BREAKING CHANGE: ${answers.breaking}` : '';
     const issues = answers.issues ? answers.issues : false;
 
-    return [head, body, breaking, issues].join('\n\n')
+    return `${jiraTicket} ${[head, body, breaking, issues].join('\n\n')}`
   }
 }
