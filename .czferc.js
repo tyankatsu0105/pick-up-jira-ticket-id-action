@@ -108,6 +108,6 @@ module.exports = {
     const breaking = answers.breaking ? `BREAKING CHANGE: ${answers.breaking}` : '';
     const issues = answers.issues ? answers.issues : false;
 
-    return `${jiraTicket} ${[head, body, breaking, issues].join('\n\n')}`
+    return `${jiraTicket} ${[head, body, breaking, issues].filter(Boolean).join('\n\n')}`
   }
 }
