@@ -1,5 +1,5 @@
 name: 'Your name here'
-description: 'Provide a description here'
+description: "Pick up Jira ticket ID from commit comment and combine as PR's comment"
 author: 'Your name or organization here'
 inputs:
   milliseconds: # change this

@@ -29,5 +29,9 @@ jobs:
 
       - uses: ./
         with:
-          milliseconds: 1000
-
+          JIRA_CLIENT_PROTOCOL: ${{ secrets.JIRA_CLIENT_PROTOCOL }}
+          JIRA_CLIENT_HOST: ${{ secrets.JIRA_CLIENT_HOST }}
+          JIRA_CLIENT_USERNAME: ${{ secrets.JIRA_CLIENT_USERNAME }}
+          JIRA_CLIENT_PASSWORD: ${{ secrets.JIRA_CLIENT_PASSWORD }}
+          JIRA_CLIENT_API_VERSION: ${{ secrets.JIRA_CLIENT_API_VERSION }}
+          JIRA_CLIENT_STRICT_SSL: ${{ secrets.JIRA_CLIENT_STRICT_SSL }}
