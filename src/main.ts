@@ -2,10 +2,10 @@ import { Jira } from './jira';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const isProduction = process.env.NODE_ENV === 'production';
-
 import * as core from '@actions/core';
 // import { wait } from './wait';
+
+const isProduction = process.env.NODE_ENV === 'production';
 
 async function run(): Promise<void> {
   // const JIRA_CLIENT_PROTOCOL = core.getInput('JIRA_CLIENT_PROTOCOL');
@@ -17,29 +17,21 @@ async function run(): Promise<void> {
   //   core.getInput('JIRA_CLIENT_STRICT_SSL') === 'true';
 
   const JIRA_CLIENT_PROTOCOL =
-    (isProduction
-      ? core.getInput('JIRA_CLIENT_PROTOCOL')
-      : process.env.JIRA_CLIENT_PROTOCOL) || 'https';
+    core.getInput('JIRA_CLIENT_PROTOCOL') || process.env.JIRA_CLIENT_PROTOCOL;
   const JIRA_CLIENT_HOST =
-    (isProduction
-      ? core.getInput('JIRA_CLIENT_HOST')
-      : process.env.JIRA_CLIENT_HOST) || '';
+    core.getInput('JIRA_CLIENT_HOST') ||
+    (process.env.JIRA_CLIENT_HOST as string);
   const JIRA_CLIENT_USERNAME =
-    (isProduction
-      ? core.getInput('JIRA_CLIENT_USERNAME')
-      : process.env.JIRA_CLIENT_USERNAME) || '';
+    core.getInput('JIRA_CLIENT_USERNAME') || process.env.JIRA_CLIENT_USERNAME;
   const JIRA_CLIENT_PASSWORD =
-    (isProduction
-      ? core.getInput('JIRA_CLIENT_PASSWORD')
-      : process.env.JIRA_CLIENT_PASSWORD) || '';
+    core.getInput('JIRA_CLIENT_PASSWORD') || process.env.JIRA_CLIENT_PASSWORD;
   const JIRA_CLIENT_API_VERSION =
-    (isProduction
-      ? core.getInput('JIRA_CLIENT_API_VERSION')
-      : process.env.JIRA_CLIENT_API_VERSION) || '2';
+    core.getInput('JIRA_CLIENT_API_VERSION') ||
+    process.env.JIRA_CLIENT_API_VERSION;
+
   const JIRA_CLIENT_STRICT_SSL =
-    (isProduction
-      ? core.getInput('JIRA_CLIENT_API_STRICT_SSL') === 'true'
-      : process.env.JIRA_CLIENT_API_STRICT_SSL) === 'true' && true;
+    core.getInput('JIRA_CLIENT_STRICT_SSL') === 'true' ||
+    process.env.JIRA_CLIENT_STRICT_SSL === 'true';
 
   const jira = new Jira({
     protocol: JIRA_CLIENT_PROTOCOL,
