@@ -61,7 +61,12 @@ async function run(): Promise<void> {
     // core.setOutput('time', new Date().toTimeString());
 
     const issue = await jira.getIssueInfo();
-    core.debug(JSON.stringify(issue, null, 2));
+
+    if (isProduction) {
+      core.debug(JSON.stringify(issue, null, 2));
+    } else {
+      console.log(issue);
+    }
   } catch (error) {
     core.setFailed(error.message);
   }
