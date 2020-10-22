@@ -13,7 +13,8 @@ async function run(): Promise<void> {
   const JIRA_CLIENT_USERNAME = core.getInput('JIRA_CLIENT_USERNAME');
   const JIRA_CLIENT_PASSWORD = core.getInput('JIRA_CLIENT_PASSWORD');
   const JIRA_CLIENT_API_VERSION = core.getInput('JIRA_CLIENT_API_VERSION');
-  const JIRA_CLIENT_STRICT_SSL = core.getInput('JIRA_CLIENT_STRICT_SSL');
+  const JIRA_CLIENT_STRICT_SSL =
+    core.getInput('JIRA_CLIENT_STRICT_SSL') === 'true';
 
   // const JIRA_CLIENT_PROTOCOL =
   //   (isProduction
