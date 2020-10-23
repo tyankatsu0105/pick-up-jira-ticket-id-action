@@ -18,8 +18,9 @@ export class Jira {
     });
   }
 
-  async getIssueInfo(): ReturnType<JiraClient['findIssue']> {
-    const issue = await this.jira.findIssue('PUJTIA-3');
-    return issue;
+  public async getSubtasks(issueNumber: string) {
+    const issue = await this.jira.findIssue(issueNumber);
+    const subtasks = issue.fields.subtasks;
+    return subtasks;
   }
 }
