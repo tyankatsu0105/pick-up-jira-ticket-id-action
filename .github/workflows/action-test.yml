@@ -50,4 +50,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: jira-info
           message: |
-            ここにjiraの情報書いていく
+            ここにjiraの情報書いていく test test
