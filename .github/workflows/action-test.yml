@@ -48,6 +48,6 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          append: true
+          recreate: true
           message: |
-            Hello from GitHub Actions
+            Hello from GitHub Actions✌️
