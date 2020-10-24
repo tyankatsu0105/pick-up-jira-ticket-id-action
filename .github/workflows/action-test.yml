@@ -1,6 +1,5 @@
 name: Action Test
 on:
-  push:
   pull_request:
     types:
       - opened
