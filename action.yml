@@ -15,6 +15,9 @@ inputs:
   JIRA_CLIENT_API_VERSION:
     required: false
     default: 'true'
+  JIRA_TICKET_KEYS:
+    description: 'Input Jira ticket keys. You can use Regex.'
+    required: true
 runs:
   using: 'node12'
   main: 'dist/index.js'

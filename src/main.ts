@@ -1,8 +1,11 @@
-import { Jira } from './jira';
+import * as core from '@actions/core';
+import * as ActionGithub from '@actions/github';
+
 import dotenv from 'dotenv';
 dotenv.config();
 
-import * as core from '@actions/core';
+import { Jira } from './jira';
+import { Github } from './github';
 
 const isProduction = process.env.NODE_ENV === 'production';
 
@@ -27,13 +30,15 @@ async function run(): Promise<void> {
     strictSSL: JIRA_CLIENT_STRICT_SSL,
   });
 
+  const github = new Github(ActionGithub.context);
+
   try {
     const issue = await jira.getSubtasks('PUJTIA-3');
+    const payload = github.getPRTitle();
 
     if (isProduction) {
       core.debug(JSON.stringify(issue, null, 2));
-    } else {
-      console.log(JSON.stringify(issue, null, 2));
+      core.debug(JSON.stringify(payload, null, 2));
     }
   } catch (error) {
     core.setFailed(error.message);
