@@ -22,7 +22,8 @@ const JIRA_CLIENT_API_VERSION = core.getInput('JIRA_CLIENT_API_VERSION');
 const JIRA_CLIENT_STRICT_SSL =
   core.getInput('JIRA_CLIENT_STRICT_SSL') === 'true';
 
-const JIRA_TICKET_KEYS = core.getInput('JIRA_TICKET_KEYS');
+const JIRA_TICKET_KEYS = 'PUJTIA';
+// const JIRA_TICKET_KEYS = core.getInput('JIRA_TICKET_KEYS');
 
 async function run(): Promise<void> {
   const jira = new Jira({
@@ -38,8 +39,8 @@ async function run(): Promise<void> {
 
   try {
     const prTitle = github.getPRTitle();
-    const issue = await jira.getSubtasks(prTitle);
     const jiraTicketId = jira.getJiraTicketId(JIRA_TICKET_KEYS, prTitle);
+    const issue = await jira.getSubtasks(jiraTicketId);
 
     log.debug(JSON.stringify(issue, null, 2));
     log.debug(jiraTicketId);
