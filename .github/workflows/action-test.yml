@@ -51,4 +51,4 @@ jobs:
           header: jira-info
           recreate: true
           message: |
-            Hello from GitHub Actions✌️
+            ここにjiraの情報書いていく
