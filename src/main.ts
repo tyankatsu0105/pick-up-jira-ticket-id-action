@@ -36,10 +36,8 @@ async function run(): Promise<void> {
     const issue = await jira.getSubtasks('PUJTIA-3');
     const payload = github.getPRTitle();
 
-    if (isProduction) {
-      core.debug(JSON.stringify(issue, null, 2));
-      core.debug(JSON.stringify(payload, null, 2));
-    }
+    core.debug(JSON.stringify(issue, null, 2));
+    core.debug(JSON.stringify(payload, null, 2));
   } catch (error) {
     core.setFailed(error.message);
   }
