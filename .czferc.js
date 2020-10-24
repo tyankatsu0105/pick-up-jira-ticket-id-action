@@ -100,7 +100,7 @@ module.exports = {
 
   },
   commitMessage({answers}) {
-    const jiraTicket = answers.JiraTicketKeys !== notExistJiraTicket && `${answers.JiraTicketKeys}-${answers.JiraTicketID}`
+    const jiraTicket = answers.JiraTicketKeys !== notExistJiraTicket ? `${answers.JiraTicketKeys}-${answers.JiraTicketID}` : ''
 
     const scope = answers.scope ? `(${answers.scope})` : '';
     const head = `${answers.type}${scope}: ${answers.subject}`;
