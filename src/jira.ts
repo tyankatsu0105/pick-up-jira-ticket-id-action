@@ -18,9 +18,20 @@ export class Jira {
     });
   }
 
-  public async getSubtasks(issueNumber: string) {
+  public async getSubtasks(
+    issueNumber: string
+  ): Promise<JiraClient.JsonResponse['fields']['subtasks']> {
     const issue = await this.jira.findIssue(issueNumber);
     const subtasks = issue.fields.subtasks;
     return subtasks;
+  }
+
+  public getJiraTicketId(jiraTicketKeys: string, title: string): string {
+    const regexp = new RegExp(`${jiraTicketKeys}-[0-9]*`);
+
+    const jiraTicketId = title.match(regexp)?.[0];
+    if (jiraTicketId === undefined) return '';
+
+    return jiraTicketId;
   }
 }
