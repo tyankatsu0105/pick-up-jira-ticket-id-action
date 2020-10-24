@@ -5,16 +5,22 @@ type EventName = Parameters<
   ReturnType<typeof Webhooks.createEventHandler>['on']
 >[0];
 
+type UnknownObject = Record<string, unknown>;
+
 export class Github {
-  constructor(private context: typeof github.context) {}
+  eventName: EventName;
+  payload: UnknownObject;
+  constructor(private context: typeof github.context) {
+    this.eventName = this.context.eventName as EventName;
+    this.payload = this.context.payload;
+  }
 
   getPRTitle() {
-    const eventName = this.context.eventName as EventName;
-    if (eventName !== 'pull_request' && eventName !== 'push')
+    if (this.eventName !== 'pull_request' && this.eventName !== 'push')
       throw new Error('This event is not support');
 
-    const pushPayload = github.context
-      .payload as Webhooks.EventPayloads.WebhookPayloadPullRequest;
+    const pushPayload = this
+      .payload as Webhooks.EventPayloads.WebhookPayloadPush;
     return pushPayload;
   }
 }
