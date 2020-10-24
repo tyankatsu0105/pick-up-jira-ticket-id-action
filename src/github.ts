@@ -7,6 +7,19 @@ type EventName = Parameters<
 
 type UnknownObject = Record<string, unknown>;
 
+type Payload =
+  | Webhooks.EventPayloads.WebhookPayloadPush
+  | Webhooks.EventPayloads.WebhookPayloadPullRequest;
+
+/**
+ * Support events:
+ * - pull_request
+ * - on
+ */
+const parseGitHubPayload = (payload: Payload) => {
+  return payload;
+};
+
 export class Github {
   eventName: EventName;
   payload: UnknownObject;
@@ -16,11 +29,15 @@ export class Github {
   }
 
   getPRTitle() {
-    if (this.eventName !== 'pull_request' && this.eventName !== 'push')
-      throw new Error('This event is not support');
+    switch (this.eventName) {
+      case 'push':
+      case 'pull_request': {
+        const payload = parseGitHubPayload(this.payload as Payload);
+        return payload;
+      }
 
-    const pushPayload = this
-      .payload as Webhooks.EventPayloads.WebhookPayloadPush;
-    return pushPayload;
+      default:
+        throw new Error('This event is not support');
+    }
   }
 }
