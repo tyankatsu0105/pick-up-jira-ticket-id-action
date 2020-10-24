@@ -8,12 +8,17 @@ import { Jira } from './jira';
 import { Github } from './github';
 import * as Libs from './libs';
 
+// ================================================
+// setups
+// ================================================
+
 const isProduction = Libs.isProduction;
 const log = new Libs.Log(isProduction);
 
 // ================================================
 // env
 // ================================================
+
 const JIRA_CLIENT_PROTOCOL = core.getInput('JIRA_CLIENT_PROTOCOL');
 const JIRA_CLIENT_HOST = core.getInput('JIRA_CLIENT_HOST');
 const JIRA_CLIENT_USERNAME = core.getInput('JIRA_CLIENT_USERNAME');
@@ -22,8 +27,11 @@ const JIRA_CLIENT_API_VERSION = core.getInput('JIRA_CLIENT_API_VERSION');
 const JIRA_CLIENT_STRICT_SSL =
   core.getInput('JIRA_CLIENT_STRICT_SSL') === 'true';
 
-const JIRA_TICKET_KEYS = 'PUJTIA';
-// const JIRA_TICKET_KEYS = core.getInput('JIRA_TICKET_KEYS');
+const JIRA_TICKET_KEYS = core.getInput('JIRA_TICKET_KEYS');
+
+// ================================================
+// run
+// ================================================
 
 async function run(): Promise<void> {
   const jira = new Jira({
@@ -36,14 +44,16 @@ async function run(): Promise<void> {
   });
 
   const github = new Github(ActionGithub.context);
+  const eventName = github.getEventName();
 
   try {
-    const prTitle = github.getPRTitle();
-    const jiraTicketId = jira.getJiraTicketId(JIRA_TICKET_KEYS, prTitle);
-    const issue = await jira.getSubtasks(jiraTicketId);
+    // const prTitle = github.getPRTitle();
+    // const jiraTicketId = jira.getJiraTicketId(JIRA_TICKET_KEYS, prTitle);
+    // const subtasks = await jira.getSubtasks('PUJTIA-3');
+    // const subtasks = await jira.getSubtasks(jiraTicketId);
 
-    log.debug(JSON.stringify(issue, null, 2));
-    log.debug(jiraTicketId);
+    // log.debug(JSON.stringify(subtasks, null, 2));
+    log.debug(JSON.stringify(ActionGithub.context, null, 2));
   } catch (error) {
     core.setFailed(error.message);
   }

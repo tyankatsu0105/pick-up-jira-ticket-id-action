@@ -22,7 +22,11 @@ export class Github {
     this.payload = this.context.payload as Payload;
   }
 
-  getPRTitle(): string {
+  public getEventName(): EventName {
+    return this.eventName;
+  }
+
+  public getPRTitle(): string {
     if (this.eventName !== 'pull_request')
       throw new Error("event name must be 'pull_request'");
 
