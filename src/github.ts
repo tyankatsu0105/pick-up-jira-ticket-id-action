@@ -10,7 +10,7 @@ export class Github {
 
   getPRTitle() {
     const eventName = this.context.eventName as EventName;
-    if (eventName !== 'pull_request')
+    if (eventName !== 'pull_request' && eventName !== 'push')
       throw new Error('This event is not support');
 
     const pushPayload = github.context
