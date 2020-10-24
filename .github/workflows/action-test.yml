@@ -48,6 +48,7 @@ jobs:
         uses: marocchino/sticky-pull-request-comment@v1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: jira-info
           recreate: true
           message: |
             Hello from GitHub Actions✌️
