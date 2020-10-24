@@ -6,8 +6,10 @@ dotenv.config();
 
 import { Jira } from './jira';
 import { Github } from './github';
+import * as Libs from './libs';
 
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = Libs.isProduction;
+const log = new Libs.Log(isProduction);
 
 // ================================================
 // env
@@ -33,11 +35,11 @@ async function run(): Promise<void> {
   const github = new Github(ActionGithub.context);
 
   try {
-    const issue = await jira.getSubtasks('PUJTIA-3');
+    // const issue = await jira.getSubtasks('PUJTIA-3');
     const payload = github.getPRTitle();
 
-    core.debug(JSON.stringify(issue, null, 2));
-    core.debug(JSON.stringify(payload, null, 2));
+    // log.debug(JSON.stringify(issue, null, 2));
+    log.debug(JSON.stringify(payload, null, 2));
   } catch (error) {
     core.setFailed(error.message);
   }
