@@ -47,12 +47,11 @@ async function run(): Promise<void> {
   const eventName = github.getEventName();
 
   try {
-    // const prTitle = github.getPRTitle();
-    // const jiraTicketId = jira.getJiraTicketId(JIRA_TICKET_KEYS, prTitle);
-    // const subtasks = await jira.getSubtasks('PUJTIA-3');
-    // const subtasks = await jira.getSubtasks(jiraTicketId);
+    const prTitle = github.getPRTitle();
+    const jiraTicketId = jira.getJiraTicketId(JIRA_TICKET_KEYS, prTitle);
+    const subtasks = await jira.getSubtasks(jiraTicketId);
 
-    // log.debug(JSON.stringify(subtasks, null, 2));
+    log.debug(JSON.stringify(subtasks, null, 2));
     log.debug(JSON.stringify(ActionGithub.context, null, 2));
   } catch (error) {
     core.setFailed(error.message);

@@ -8,11 +8,8 @@ type EventName = Parameters<
 /**
  * Support events:
  * - pull_request
- * - on
  */
-type Payload =
-  | Webhooks.EventPayloads.WebhookPayloadPush
-  | Webhooks.EventPayloads.WebhookPayloadPullRequest;
+type Payload = Webhooks.EventPayloads.WebhookPayloadPullRequest;
 
 export class Github {
   eventName: EventName;
