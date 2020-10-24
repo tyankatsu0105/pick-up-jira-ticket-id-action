@@ -49,6 +49,5 @@ jobs:
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: jira-info
-          recreate: true
           message: |
             ここにjiraの情報書いていく
