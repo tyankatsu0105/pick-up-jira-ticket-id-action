@@ -43,3 +43,11 @@ jobs:
           JIRA_CLIENT_API_VERSION: ${{ secrets.JIRA_CLIENT_API_VERSION }}
           JIRA_CLIENT_STRICT_SSL: ${{ secrets.JIRA_CLIENT_STRICT_SSL }}
           JIRA_TICKET_KEYS: PUJTIA
+
+      - name: Create PR Comment
+        uses: marocchino/sticky-pull-request-comment@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          append: true
+          message: |
+            Hello from GitHub Actions
