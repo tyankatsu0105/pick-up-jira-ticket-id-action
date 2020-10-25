@@ -63,13 +63,27 @@ export class Github {
     if (this.eventName !== 'pull_request')
       throw new Error("event name must be 'pull_request'");
 
-    const payload = this
-      .payload as Webhooks.EventPayloads.WebhookPayloadPullRequest;
+    let result: Webhooks.EventPayloads.WebhookPayloadStatusCommit[] = [];
 
-    const res = await fetch(payload.pull_request.commits_url);
-    const json: Webhooks.EventPayloads.WebhookPayloadStatusCommit[] = await res.json();
+    const fetchCommits = async (pageNumber: number) => {
+      const payload = this
+        .payload as Webhooks.EventPayloads.WebhookPayloadPullRequest;
 
-    return json;
+      const res = await fetch(
+        `${payload.pull_request.commits_url}?page=${pageNumber.toString()}`
+      );
+      const json: Webhooks.EventPayloads.WebhookPayloadStatusCommit[] = await res.json();
+
+      if (json.length === 0) return;
+
+      result = [...result, ...json];
+
+      fetchCommits(pageNumber + 1);
+    };
+
+    fetchCommits(1);
+
+    return result;
   }
 
   public createMessage(
