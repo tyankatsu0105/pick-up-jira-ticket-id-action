@@ -88,25 +88,27 @@ export class Github {
     const jiraUrl = (jiraTicketId: string) =>
       `${info.protocol}://${info.host}/browse/${jiraTicketId}`;
 
-    const subTaskMap = info.issue.fields.subtasks.reduce<SubTaskMap>(
-      (acc, current) => {
-        acc[current.key] = {
-          isOthers: false,
-          summary: current.fields.summary,
-          url: jiraUrl(current.key),
-          items: [],
-        };
-        return acc;
-      },
-      {
-        others: {
-          isOthers: true,
-          summary: 'others',
-          url: '',
-          items: [],
+    const subTaskMap = info.issue.fields.subtasks
+      .sort((a, b) => a.key.localeCompare(b.key))
+      .reduce<SubTaskMap>(
+        (acc, current) => {
+          acc[current.key] = {
+            isOthers: false,
+            summary: current.fields.summary,
+            url: jiraUrl(current.key),
+            items: [],
+          };
+          return acc;
         },
-      }
-    );
+        {
+          others: {
+            isOthers: true,
+            summary: 'others',
+            url: '',
+            items: [],
+          },
+        }
+      );
 
     info.commits.forEach(commit => {
       const jiraTicketId = commit.commit.message.match(regexp)?.[0] || 'others';
