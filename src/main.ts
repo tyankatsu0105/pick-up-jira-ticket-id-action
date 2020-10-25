@@ -50,6 +50,7 @@ async function run(): Promise<void> {
     const jiraTicketId = jira.getJiraTicketId(JIRA_TICKET_KEYS, prTitle);
     const issue = await jira.getIssue(jiraTicketId);
     const commits = await github.getCommits();
+    log.debug(JSON.stringify(commits, null, 2));
 
     const message = github.createMessage(
       {
