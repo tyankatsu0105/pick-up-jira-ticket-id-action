@@ -112,18 +112,20 @@ export class Github {
       subTaskMap[jiraTicketId].items.push({
         url: commit.html_url,
         message: options?.commitMessageLength
-          ? commit.commit.message.slice(0, options?.commitMessageLength)
-          : commit.commit.message,
+          ? commit.commit.message
+              .split('\n')[0]
+              .slice(0, options?.commitMessageLength)
+          : commit.commit.message.split('\n')[0],
       });
     });
 
     const messageSrc = {
       issue: `- [${info.issue.fields.summary}](${jiraUrl(info.issue.key)})`,
       subtasks(subTaskMap: SubTaskMap) {
-        return Object.values(subTaskMap)
-          .filter(value => !value.isOthers)
-          .map(value => {
-            const subtask = `  - [${value.summary}](${value.url})`;
+        return Object.entries(subTaskMap)
+          .filter(([, value]) => !value.isOthers)
+          .map(([key, value]) => {
+            const subtask = `  - [${key} - ${value.summary}](${value.url})`;
             const commits = value.items
               .map(item => `    - [${item.message}](${item.url})`)
               .join('\n');
