@@ -12,8 +12,8 @@ import * as Libs from './libs';
 // setups
 // ================================================
 
-const isProduction = Libs.isProduction;
-const log = new Libs.Log(isProduction);
+const isProduction = Libs.IsProduction.isProduction;
+const log = new Libs.Log.Log(isProduction);
 
 // ================================================
 // env
@@ -44,15 +44,26 @@ async function run(): Promise<void> {
   });
 
   const github = new Github(ActionGithub.context);
-  const eventName = github.getEventName();
 
   try {
     const prTitle = github.getPRTitle();
     const jiraTicketId = jira.getJiraTicketId(JIRA_TICKET_KEYS, prTitle);
-    const subtasks = await jira.getSubtasks(jiraTicketId);
+    const issue = await jira.getIssue(jiraTicketId);
+    const commits = await github.getCommits();
 
-    log.debug(JSON.stringify(subtasks, null, 2));
-    log.debug(JSON.stringify(ActionGithub.context, null, 2));
+    const message = github.createMessage(
+      {
+        issue,
+        commits,
+        jiraTicketKeys: JIRA_TICKET_KEYS,
+        host: JIRA_CLIENT_HOST,
+      },
+      {
+        commitMessageLength: 100,
+      }
+    );
+
+    log.debug(message);
   } catch (error) {
     core.setFailed(error.message);
   }

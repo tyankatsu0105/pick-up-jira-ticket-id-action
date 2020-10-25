@@ -1,5 +1,10 @@
 import * as github from '@actions/github';
-import * as Webhooks from '@octokit/webhooks';
+import type * as Webhooks from '@octokit/webhooks';
+import fetch from 'node-fetch';
+
+import type JiraClient from 'jira-client';
+
+import * as Libs from './libs';
 
 type EventName = Parameters<
   ReturnType<typeof Webhooks.createEventHandler>['on']
@@ -11,16 +16,32 @@ type EventName = Parameters<
  */
 type Payload = Webhooks.EventPayloads.WebhookPayloadPullRequest;
 
+type SubTaskMap = {
+  [key: string]: {
+    url: string;
+    items: SubTaskItem[];
+  };
+
+  /**
+   * Uncategorized subtasks
+   */
+  others: {
+    url: string;
+    items: SubTaskItem[];
+  };
+};
+
+type SubTaskItem = {
+  url: Webhooks.EventPayloads.WebhookPayloadStatusCommit['html_url'];
+  message: Webhooks.EventPayloads.WebhookPayloadStatusCommit['commit']['message'];
+};
+
 export class Github {
   eventName: EventName;
   payload: Payload;
   constructor(private context: typeof github.context) {
     this.eventName = this.context.eventName as EventName;
     this.payload = this.context.payload as Payload;
-  }
-
-  public getEventName(): EventName {
-    return this.eventName;
   }
 
   public getPRTitle(): string {
@@ -33,5 +54,68 @@ export class Github {
     const prTitle = payload.pull_request.title;
 
     return prTitle;
+  }
+
+  public async getCommits(): Promise<
+    Webhooks.EventPayloads.WebhookPayloadStatusCommit[]
+  > {
+    if (this.eventName !== 'pull_request')
+      throw new Error("event name must be 'pull_request'");
+
+    const payload = this
+      .payload as Webhooks.EventPayloads.WebhookPayloadPullRequest;
+
+    const res = await fetch(payload.pull_request.commits_url);
+    const json: Webhooks.EventPayloads.WebhookPayloadStatusCommit[] = await res.json();
+
+    return json;
+  }
+
+  public createMessage(
+    info: {
+      commits: Webhooks.EventPayloads.WebhookPayloadStatusCommit[];
+      issue: JiraClient.JsonResponse;
+      jiraTicketKeys: string;
+      host: string;
+    },
+    options?: {
+      commitMessageLength: number;
+    }
+  ): string {
+    const regexp = Libs.Regexp.jiraTicketId(info.jiraTicketKeys);
+    const jiraUrl = (jiraTicketId: string) =>
+      `${info.host}/browse/${jiraTicketId}`;
+
+    const subTaskMap = info.issue.fields.subtasks.reduce<SubTaskMap>(
+      (acc, current) => {
+        acc[current.key] = {
+          url: jiraUrl(current.key),
+          items: [],
+        };
+        return acc;
+      },
+      {
+        others: {
+          url: '',
+          items: [],
+        },
+      }
+    );
+
+    info.commits.forEach(commit => {
+      const jiraTicketId = commit.commit.message.match(regexp)?.[0] || 'others';
+      subTaskMap[jiraTicketId].items.push({
+        url: commit.html_url,
+        message: options?.commitMessageLength
+          ? commit.commit.message.slice(0, options?.commitMessageLength)
+          : commit.commit.message,
+      });
+    });
+
+    const message = `
+- [${info.issue.fields.summary}](${jiraUrl(info.issue.key)})
+    `;
+
+    return message;
   }
 }

@@ -1,4 +1,5 @@
 import JiraClient from 'jira-client';
+import * as Libs from './libs';
 
 export class Jira {
   jira: JiraClient;
@@ -18,19 +19,16 @@ export class Jira {
     });
   }
 
-  public async getSubtasks(
-    issueNumber: string
-  ): Promise<JiraClient.JsonResponse['fields']['subtasks']> {
+  public async getIssue(issueNumber: string): Promise<JiraClient.JsonResponse> {
     const issue = await this.jira.findIssue(issueNumber);
-    const subtasks = issue.fields.subtasks;
-    return subtasks;
+    return issue;
   }
 
   public getJiraTicketId(jiraTicketKeys: string, title: string): string {
-    const regexp = new RegExp(`${jiraTicketKeys}-[0-9]*`);
+    const regexp = Libs.Regexp.jiraTicketId(jiraTicketKeys);
 
     const jiraTicketId = title.match(regexp)?.[0];
-    if (jiraTicketId === undefined) return '';
+    if (jiraTicketId == null) return '';
 
     return jiraTicketId;
   }
