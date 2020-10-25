@@ -26,6 +26,7 @@ type SubTaskMap = {
 };
 
 type SubTask = {
+  isOthers: boolean;
   url: string;
   summary: JiraClient.JsonResponse['fields']['summary'];
   items: SubTaskItem[];
@@ -89,6 +90,7 @@ export class Github {
     const subTaskMap = info.issue.fields.subtasks.reduce<SubTaskMap>(
       (acc, current) => {
         acc[current.key] = {
+          isOthers: false,
           summary: current.fields.summary,
           url: jiraUrl(current.key),
           items: [],
@@ -97,6 +99,7 @@ export class Github {
       },
       {
         others: {
+          isOthers: true,
           summary: 'others',
           url: '',
           items: [],
@@ -117,12 +120,26 @@ export class Github {
     const messageSrc = {
       issue: `- [${info.issue.fields.summary}](${jiraUrl(info.issue.key)})`,
       subtasks(subTaskMap: SubTaskMap) {
-        return Object.entries(subTaskMap)
-          .map(([key, value]) => {
-            const subtask =
-              key === 'others'
-                ? `  - ${value.summary}`
-                : `  - [${value.summary}](${value.url})`;
+        return Object.values(subTaskMap)
+          .filter(value => !value.isOthers)
+          .map(value => {
+            const subtask = `  - [${value.summary}](${value.url})`;
+            const commits = value.items
+              .map(item => `    - [${item.message}](${item.url})`)
+              .join('\n');
+
+            return `
+${subtask}
+${commits}`;
+          })
+          .join('\n');
+      },
+
+      others(subTaskMap: SubTaskMap) {
+        return Object.values(subTaskMap)
+          .filter(value => value.isOthers)
+          .map(value => {
+            const subtask = `  - ${value.summary}`;
             const commits = value.items
               .map(item => `    - [${item.message}](${item.url})`)
               .join('\n');
@@ -138,6 +155,7 @@ ${commits}`;
     const message = `
 ${messageSrc.issue}
 ${messageSrc.subtasks(subTaskMap)}
+${messageSrc.others(subTaskMap)}
 `;
 
     return message;
