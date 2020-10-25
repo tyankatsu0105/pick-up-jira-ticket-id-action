@@ -78,10 +78,10 @@ export class Github {
 
       result = [...result, ...json];
 
-      fetchCommits(pageNumber + 1);
+      await fetchCommits(pageNumber + 1);
     };
 
-    fetchCommits(1);
+    await fetchCommits(1);
 
     return result;
   }
