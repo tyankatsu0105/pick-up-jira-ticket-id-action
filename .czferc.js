@@ -100,7 +100,7 @@ module.exports = {
 
   },
   commitMessage({answers}) {
-    const jiraTicket = answers.JiraTicketKeys !== notExistJiraTicket && `${answers.JiraTicketKeys}-${answers.JiraTicketID}`
+    const jiraTicket = answers.JiraTicketKeys !== notExistJiraTicket ? `${answers.JiraTicketKeys}-${answers.JiraTicketID}` : ''
 
     const scope = answers.scope ? `(${answers.scope})` : '';
     const head = `${answers.type}${scope}: ${answers.subject}`;
@@ -108,6 +108,6 @@ module.exports = {
     const breaking = answers.breaking ? `BREAKING CHANGE: ${answers.breaking}` : '';
     const issues = answers.issues ? answers.issues : false;
 
-    return `${jiraTicket} ${[head, body, breaking, issues].join('\n\n')}`
+    return `${jiraTicket} ${[head, body, breaking, issues].filter(Boolean).join('\n\n')}`
   }
 }

@@ -1,11 +1,23 @@
-name: 'Your name here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'Pick up Jura ticket ID Action'
+description: "Pick up Jira ticket ID from commit comment and combine as PR's comment"
+author: 'tyankatsu0105'
 inputs:
-  milliseconds: # change this
+  JIRA_CLIENT_PROTOCOL:
+    required: false
+    default: 'https'
+  JIRA_CLIENT_HOST:
     required: true
-    description: 'input description here'
-    default: 'default value if applicable'
+  JIRA_CLIENT_USERNAME:
+    required: false
+  JIRA_CLIENT_PASSWORD:
+    required: false
+    default: '2'
+  JIRA_CLIENT_API_VERSION:
+    required: false
+    default: 'true'
+  JIRA_TICKET_KEYS:
+    description: 'Input Jira ticket keys. You can use Regex.'
+    required: true
 runs:
   using: 'node12'
   main: 'dist/index.js'

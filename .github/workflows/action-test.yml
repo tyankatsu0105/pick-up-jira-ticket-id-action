@@ -1,5 +1,11 @@
 name: Action Test
-on: push
+on:
+  pull_request:
+    types:
+      - opened
+      - edited
+      - synchronize
+
 jobs:
   action-test:
     name: Action Test
@@ -28,6 +34,20 @@ jobs:
         run: npm run build
 
       - uses: ./
+        id: jira-subtasks
         with:
-          milliseconds: 1000
+          JIRA_CLIENT_PROTOCOL: ${{ secrets.JIRA_CLIENT_PROTOCOL }}
+          JIRA_CLIENT_HOST: ${{ secrets.JIRA_CLIENT_HOST }}
+          JIRA_CLIENT_USERNAME: ${{ secrets.JIRA_CLIENT_USERNAME }}
+          JIRA_CLIENT_PASSWORD: ${{ secrets.JIRA_CLIENT_PASSWORD }}
+          JIRA_CLIENT_API_VERSION: ${{ secrets.JIRA_CLIENT_API_VERSION }}
+          JIRA_CLIENT_STRICT_SSL: ${{ secrets.JIRA_CLIENT_STRICT_SSL }}
+          JIRA_TICKET_KEYS: PUJTIA
 
+      - name: Create PR Comment
+        uses: marocchino/sticky-pull-request-comment@v1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          header: jira-info
+          message: |
+            ${{ steps.jira-subtasks.outputs.message }}
