@@ -34,6 +34,7 @@ jobs:
         run: npm run build
 
       - uses: ./
+        id: jira-subtasks
         with:
           JIRA_CLIENT_PROTOCOL: ${{ secrets.JIRA_CLIENT_PROTOCOL }}
           JIRA_CLIENT_HOST: ${{ secrets.JIRA_CLIENT_HOST }}
@@ -49,4 +50,4 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           header: jira-info
           message: |
-            ここにjiraの情報書いていく test test
+            ${{ steps.jira-subtasks.outputs.message }}

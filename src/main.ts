@@ -63,7 +63,7 @@ async function run(): Promise<void> {
       }
     );
 
-    log.debug(message);
+    core.setOutput('message', message);
   } catch (error) {
     core.setFailed(error.message);
   }
