@@ -3,8 +3,6 @@
 [![deploy](https://img.shields.io/badge/deploy-🛳%20Ship.js-blue?style=flat)](https://github.com/algolia/shipjs)
 
 Pick up Jira ticket ID from commit comment and combine as PR's comment
-See example:
-https://github.com/tyankatsu0105/pick-up-jira-ticket-id-action/pull/15#issuecomment-715921363
 
 ## Usage
 
