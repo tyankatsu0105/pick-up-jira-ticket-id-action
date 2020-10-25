@@ -21,6 +21,14 @@ type SubTaskMap = {
     url: string;
     items: SubTaskItem[];
   };
+
+  /**
+   * Uncategorized subtasks
+   */
+  others: {
+    url: string;
+    items: SubTaskItem[];
+  };
 };
 
 type SubTaskItem = {
