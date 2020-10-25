@@ -22,6 +22,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      # See release versions https://github.com/tyankatsu0105/pick-up-jira-ticket-id-action/releases
       - uses: tyankatsu0105/pick-up-jira-ticket-id-action@v0.1.0
         id: jira-subtasks
         with:
@@ -41,6 +42,27 @@ jobs:
           message: |
             ${{ steps.jira-subtasks.outputs.message }}
 ```
+
+This action includes [node-jira-client](https://github.com/jira-node/node-jira-client).
+So, [this document](https://github.com/jira-node/node-jira-client#examples) may help you.
+
+- JIRA_CLIENT_PROTOCOL
+  - example... https
+  - default `https`
+- JIRA_CLIENT_HOST
+  - example... tyankatsu-sample.atlassian.net
+- JIRA_CLIENT_USERNAME
+  - example... example@gmail.com
+- JIRA_CLIENT_PASSWORD
+  - Generated token with Jira software settings
+- JIRA_CLIENT_API_VERSION
+  - example... 3
+  - default `2`
+- JIRA_CLIENT_STRICT_SSL
+  - example... true
+  - default `true`
+- JIRA_TICKET_KEYS
+  - example... (FOO|BAR)
 
 ## Development
 
