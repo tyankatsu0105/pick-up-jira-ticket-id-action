@@ -57,6 +57,7 @@ async function run(): Promise<void> {
         commits,
         jiraTicketKeys: JIRA_TICKET_KEYS,
         host: JIRA_CLIENT_HOST,
+        protocol: JIRA_CLIENT_PROTOCOL,
       },
       {
         commitMessageLength: 100,

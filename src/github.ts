@@ -78,6 +78,7 @@ export class Github {
       issue: JiraClient.JsonResponse;
       jiraTicketKeys: string;
       host: string;
+      protocol: string;
     },
     options?: {
       commitMessageLength: number;
@@ -85,7 +86,7 @@ export class Github {
   ): string {
     const regexp = Libs.Regexp.jiraTicketId(info.jiraTicketKeys);
     const jiraUrl = (jiraTicketId: string) =>
-      `${info.host}/browse/${jiraTicketId}`;
+      `${info.protocol}://${info.host}/browse/${jiraTicketId}`;
 
     const subTaskMap = info.issue.fields.subtasks.reduce<SubTaskMap>(
       (acc, current) => {
@@ -120,14 +121,16 @@ export class Github {
     });
 
     const messageSrc = {
-      issue: `- [${info.issue.fields.summary}](${jiraUrl(info.issue.key)})`,
+      issue: `- [${info.issue.key} - ${info.issue.fields.summary}](${jiraUrl(
+        info.issue.key
+      )})`,
       subtasks(subTaskMap: SubTaskMap) {
         return Object.entries(subTaskMap)
           .filter(([, value]) => !value.isOthers)
           .map(([key, value]) => {
             const subtask = `  - [${key} - ${value.summary}](${value.url})`;
             const commits = value.items
-              .map(item => `    - [${item.message}](${item.url})`)
+              .map(item => `    - ${item.message} ${item.url}`)
               .join('\n');
 
             return `
@@ -143,7 +146,7 @@ ${commits}`;
           .map(value => {
             const subtask = `  - ${value.summary}`;
             const commits = value.items
-              .map(item => `    - [${item.message}](${item.url})`)
+              .map(item => `    - ${item.message} ${item.url}`)
               .join('\n');
 
             return `
