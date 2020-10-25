@@ -97,7 +97,7 @@ export class Github {
       },
       {
         others: {
-          summary: 'その他',
+          summary: 'others',
           url: '',
           items: [],
         },
@@ -119,7 +119,10 @@ export class Github {
       subtasks(subTaskMap: SubTaskMap) {
         return Object.entries(subTaskMap)
           .map(([key, value]) => {
-            const subtask = `  - [${value.summary}](${value.url})`;
+            const subtask =
+              key === 'others'
+                ? `  - ${value.summary}`
+                : `  - [${value.summary}](${value.url})`;
             const commits = value.items
               .map(item => `    - [${item.message}](${item.url})`)
               .join('\n');
