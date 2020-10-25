@@ -17,18 +17,18 @@ type EventName = Parameters<
 type Payload = Webhooks.EventPayloads.WebhookPayloadPullRequest;
 
 type SubTaskMap = {
-  [key: string]: {
-    url: string;
-    items: SubTaskItem[];
-  };
+  [key: string]: SubTask;
 
   /**
    * Uncategorized subtasks
    */
-  others: {
-    url: string;
-    items: SubTaskItem[];
-  };
+  others: SubTask;
+};
+
+type SubTask = {
+  url: string;
+  summary: JiraClient.JsonResponse['fields']['summary'];
+  items: SubTaskItem[];
 };
 
 type SubTaskItem = {
@@ -89,6 +89,7 @@ export class Github {
     const subTaskMap = info.issue.fields.subtasks.reduce<SubTaskMap>(
       (acc, current) => {
         acc[current.key] = {
+          summary: current.fields.summary,
           url: jiraUrl(current.key),
           items: [],
         };
@@ -96,6 +97,7 @@ export class Github {
       },
       {
         others: {
+          summary: 'その他',
           url: '',
           items: [],
         },
@@ -112,9 +114,28 @@ export class Github {
       });
     });
 
+    const messageSrc = {
+      issue: `- [${info.issue.fields.summary}](${jiraUrl(info.issue.key)})`,
+      subtasks(subTaskMap: SubTaskMap) {
+        return Object.entries(subTaskMap)
+          .map(([key, value]) => {
+            const subtask = `  - [${value.summary}](${value.url})`;
+            const commits = value.items
+              .map(item => `    - [${item.message}](${item.url})`)
+              .join('\n');
+
+            return `
+${subtask}
+${commits}`;
+          })
+          .join('\n');
+      },
+    };
+
     const message = `
-- [${info.issue.fields.summary}](${jiraUrl(info.issue.key)})
-    `;
+${messageSrc.issue}
+${messageSrc.subtasks(subTaskMap)}
+`;
 
     return message;
   }
